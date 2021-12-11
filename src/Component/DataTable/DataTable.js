@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Button } from '@mui/material';
 import UpdateData from '../UpdateData/UpdateData';
+import Home from '../Home/Home';
 
-const DataTable = ({ users, setUsers }) => {
+const DataTable = ({ users, setUsers, handleData }) => {
     const [selectNums, setSelectNums] = useState([]);
     const [selectedUser, setSelectedUser] = useState([]);
     const [updateID, setUpdateID] = useState(null);
@@ -112,7 +113,12 @@ const DataTable = ({ users, setUsers }) => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
+    console.log("In Child", array);
 
+    // handleData = () => {
+    //     return array;
+    // }
+    handleData(array);
     return (
         <>
 

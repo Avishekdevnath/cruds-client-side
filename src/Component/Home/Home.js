@@ -1,4 +1,4 @@
-import { Button, Grid } from '@mui/material';
+import { Button} from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import AddNewData from '../AddNewData/AddNewData';
@@ -10,14 +10,31 @@ const Home = () => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [users, setUsers] = useState([]);
+    const [emailData, setEmailData] = useState([]);
+
     useEffect(() => {
         fetch('http://localhost:5000/users')
             .then(res => res.json())
             .then(data => setUsers(data))
     }, [users])
+
+
+    const handleData = (e) => {
+
+        // console.log("From Child", e);
+        setEmailData(e);
+
+    };
+
+    const sendEmail = () => {
+        const data = emailData;
+        console.log("inside Email", data);
+    }
+
+
     return (
         <Box>
-            <DataTable users={users} setUsers={setUsers}></DataTable>
+            <DataTable users={users} setUsers={setUsers} handleData={handleData}></DataTable>
             <Box sx={{ height: '100%', width: '100%', my: 5, mx: 'auto', }}>
                 <Box className="">
                     <Box
@@ -28,7 +45,7 @@ const Home = () => {
                             maxWidth: 300,
                         }}
                     >
-                        <Button variant="contained" sx={{ m: '5px' }} endIcon={<SendIcon />}>
+                        <Button onClick={sendEmail} variant="contained" sx={{ m: '5px' }} endIcon={<SendIcon />}>
                             Send
                         </Button>
                         <Button onClick={handleOpen} variant="contained" sx={{ m: '5px' }} color="success">
