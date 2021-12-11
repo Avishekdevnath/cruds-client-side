@@ -2,6 +2,7 @@ import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Button } from '@mui/material';
+import UpdateData from '../UpdateData/UpdateData';
 
 const DataTable = ({ users, setUsers }) => {
     const [selectNums, setSelectNums] = useState([]);
@@ -37,7 +38,13 @@ const DataTable = ({ users, setUsers }) => {
     }
 
     const columns = [
-        { field: 'id', headerName: 'ID', headerAlign: 'center', width: 70, disableClickEventBubbling: true, },
+        {
+            field: 'id',
+            headerName: 'ID',
+            // headerAlign: 'center',
+            width: 70,
+            disableClickEventBubbling: true,
+        },
         { field: 'name', headerName: 'Name', width: 190, disableClickEventBubbling: true, },
         {
             field: 'phone', headerName: 'Phone Number', width: 150, disableClickEventBubbling: true,
@@ -65,14 +72,14 @@ const DataTable = ({ users, setUsers }) => {
                 const onClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
 
-                    return alert("JSON.stringify(thisRow, null, 4)");
+                    // return alert("JSON.stringify(thisRow, null, 4)");
                 };
 
-                return <Button variant="contained" sx={{ background: 'green' }} onClick={onClick}>Update</Button>;
+                return <Button variant="contained" sx={{ background: 'green' }} onClick={onClick, handleOpen}>Update</Button>;
             }
         },
         {
-            field: "Print",
+            field: "Delete",
             disableClickEventBubbling: true,
             renderCell: (cellValues) => {
                 return (
@@ -91,17 +98,32 @@ const DataTable = ({ users, setUsers }) => {
         }
     ];
 
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+
     return (
-        <Box sx={{ height: 400, width: '100%', my: 5, mx: 'auto' }}>
-            <DataGrid
-                rows={users}
-                columns={columns}
-                pageSize={5}
-                rowsPerPageOptions={[10]}
-                checkboxSelection
-                onSelectionModelChange={handleRowSelection}
-            />
-        </Box>
+        <>
+
+            <Box sx={{ height: 400, width: '100%', my: 5, mx: 'auto' }}>
+                <DataGrid
+                    rows={users}
+                    columns={columns}
+                    pageSize={5}
+                    rowsPerPageOptions={[10]}
+                    checkboxSelection
+                    onSelectionModelChange={handleRowSelection}
+                />
+            </Box>
+            <UpdateData
+                open={open}
+                handleClose={handleClose}
+                users={users}
+            >
+
+            </UpdateData>
+        </>
     );
 };
 

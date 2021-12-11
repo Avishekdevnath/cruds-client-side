@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { TextField, Snackbar, Alert } from '@mui/material';
+import { Box } from '@mui/system';
 
-const AddNewData = ({ open, handleClose, users }) => {
+const UpdateData = ({ open, handleClose, users }) => {
     const style = {
         position: 'absolute',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
         width: 400,
-        bgcolor: 'background.paper',
+        bgcolor: 'white',
         border: '2px solid green',
         boxShadow: 24,
         p: 4,
@@ -31,41 +31,37 @@ const AddNewData = ({ open, handleClose, users }) => {
         }
         setHandleOpen(false);
     };
-    ///////////////
-    const id = users.length + 1;
-    // const serialNumber = { id: id };
+    /////////////////////////////////
+
+
     const [data, setData] = useState();
+    //HandleOnBlur
     const handleOnBlur = e => {
         const field = e.target.name;
         const value = e.target.value;
         const newInfo = { ...data };
-        newInfo["id"] = id;
         newInfo[field] = value;
         setData(newInfo);
     }
-    // console.log(users.length + 1);
-    // // console.log('serial number: ', serialNumber);
-    // console.log(data);
 
-    const handleSubmit = (e) => {
+    //HandleOnSubmit
+    const handleSubmit = (users) => {
 
-        fetch('http://localhost:5000/users', {
-            method: 'POST',
+        alert('updated');
+        const url = `https://intense-dawn-05513.herokuapp.com/allOrders/${_id}`;
+        const updatedStatus = 'shipped';
+        const updatedUser = { status: updatedStatus }
+        fetch(url, {
+            method: 'PUT',
             headers: {
                 'content-type': 'application/json'
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(updatedUser)
         })
-            .then(res => res.json())
-            .then(data => {
-                if (data.insertedId) {
-                    setConfirm(true);
-                    handleClose();
-                }
-            })
 
         e.preventDefault();
     }
+
 
 
     return (
@@ -77,7 +73,7 @@ const AddNewData = ({ open, handleClose, users }) => {
         >
             <Box sx={style}>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                    Add New Data
+                    Update Data
                 </Typography>
 
                 <form onSubmit={handleSubmit}>
@@ -127,9 +123,9 @@ const AddNewData = ({ open, handleClose, users }) => {
                             >
                                 <Button
                                     variant="contained"
-                                    sx={{ mx: '5px', background: 'coral' }}
+                                    sx={{ mx: '5px', background: 'green' }}
                                     type="submit"
-                                    onClick={handleClick}>Save
+                                    onClick={handleClick}>Update
                                 </Button>
                                 <Button
                                     variant="contained"
@@ -150,4 +146,4 @@ const AddNewData = ({ open, handleClose, users }) => {
     );
 };
 
-export default AddNewData;
+export default UpdateData;
