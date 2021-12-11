@@ -140,12 +140,12 @@ const AddNewData = ({ open, handleClose, users }) => {
                         </div>
                     </Box>
                 </form>
-                {confirm && <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                    <Alert onClose={Close} severity="success" sx={{ width: '100%' }}>
-                        Data added successfully!
-                    </Alert>
-                </Snackbar>}
             </Box>
+            {/* {confirm && <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={Close} severity="success" sx={{ width: '100%' }}>
+                    Data added successfully!
+                </Alert>
+            </Snackbar>} */}
         </Modal>
     );
 };

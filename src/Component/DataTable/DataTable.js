@@ -3,7 +3,35 @@ import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Button } from '@mui/material';
 
-const DataTable = ({users}) => {
+const DataTable = ({ users, setUsers }) => {
+    const [select, setSelection] = useState([]);
+    console.log(select);
+
+    const handleRowSelection = (e) => {
+        setSelection(e);
+        console.log(e);
+    }
+
+    const deleteData = (event, cellValues) => {
+        const id = cellValues.row._id;
+        const confirm = window.confirm('Do you want to delete?')
+        if (confirm) {
+            const url = `http://localhost:5000/users/${id}`;
+            fetch(url, {
+                method: 'DELETE',
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.deletedCount > 0) {
+                        alert('deleted seccessfully');
+                        const remainingUsers = users.filter(user => user._id !== id)
+                        setUsers(remainingUsers);
+                    }
+                })
+        }
+
+    }
+
     const columns = [
         { field: 'id', headerName: 'ID', headerAlign: 'center', width: 70 },
         { field: 'name', headerName: 'Name', width: 190 },
@@ -40,17 +68,20 @@ const DataTable = ({users}) => {
             }
         },
         {
-            field: "delete",
-            headerName: "Delete",
-            sortable: false,
-            renderCell: (params) => {
-                const onClick = (e) => {
-                    e.stopPropagation(); // don't select this row after clicking
-
-                    return alert("JSON.stringify(thisRow, null, 4)");
-                };
-
-                return <Button variant="contained" sx={{ background: 'red' }} onClick={onClick}>Delete</Button>;
+            field: "Print",
+            renderCell: (cellValues) => {
+                return (
+                    <Button
+                        variant="contained"
+                        sx={{ background: 'red' }}
+                        color="primary"
+                        onClick={(event) => {
+                            deleteData(event, cellValues);
+                        }}
+                    >
+                        Delete
+                    </Button>
+                );
             }
         }
     ];
@@ -68,8 +99,9 @@ const DataTable = ({users}) => {
                 rows={users}
                 columns={columns}
                 pageSize={5}
-                rowsPerPageOptions={[5]}
+                rowsPerPageOptions={[10]}
                 checkboxSelection
+                onSelectionModelChange={handleRowSelection}
             />
         </Box>
     );

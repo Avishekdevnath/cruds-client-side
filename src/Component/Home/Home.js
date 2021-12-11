@@ -14,10 +14,10 @@ const Home = () => {
         fetch('http://localhost:5000/users')
             .then(res => res.json())
             .then(data => setUsers(data))
-    }, [])
+    }, [users])
     return (
         <Box>
-            <DataTable users={users}></DataTable>
+            <DataTable users={users} setUsers={setUsers}></DataTable>
             <Box sx={{ height: '100%', width: '100%', my: 5, mx: 'auto', }}>
                 <Box className="">
                     <Box
