@@ -2,6 +2,7 @@ import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Button } from '@mui/material';
+import UpdateData from '../UpdateData/UpdateData';
 
 const DataTable = ({ users, setUsers }) => {
     const [select, setSelection] = useState([]);
@@ -61,14 +62,14 @@ const DataTable = ({ users, setUsers }) => {
                 const onClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
 
-                    return alert("JSON.stringify(thisRow, null, 4)");
+                    // return alert("JSON.stringify(thisRow, null, 4)");
                 };
 
-                return <Button variant="contained" sx={{ background: 'green' }} onClick={onClick}>Update</Button>;
+                return <Button variant="contained" sx={{ background: 'green' }} onClick={onClick, handleOpen}>Update</Button>;
             }
         },
         {
-            field: "Print",
+            field: "Delete",
             renderCell: (cellValues) => {
                 return (
                     <Button
@@ -92,18 +93,32 @@ const DataTable = ({ users, setUsers }) => {
     //         .then(res => res.json())
     //         .then(data => setUsers(data))
     // }, [])
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    
 
     return (
-        <Box sx={{ height: 400, width: '100%', my: 5, mx: 'auto' }}>
-            <DataGrid
-                rows={users}
-                columns={columns}
-                pageSize={5}
-                rowsPerPageOptions={[10]}
-                checkboxSelection
-                onSelectionModelChange={handleRowSelection}
-            />
-        </Box>
+        <>
+
+            <Box sx={{ height: 400, width: '100%', my: 5, mx: 'auto' }}>
+                <DataGrid
+                    rows={users}
+                    columns={columns}
+                    pageSize={5}
+                    rowsPerPageOptions={[10]}
+                    checkboxSelection
+                    onSelectionModelChange={handleRowSelection}
+                />
+            </Box>
+            <UpdateData 
+                open={open}
+                handleClose={handleClose}
+                users={users}
+            >
+
+            </UpdateData>
+        </>
     );
 };
 
