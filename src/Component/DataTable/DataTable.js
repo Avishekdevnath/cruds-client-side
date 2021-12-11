@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Button } from '@mui/material';
 
-const DataTable = () => {
+const DataTable = ({users}) => {
     const columns = [
         { field: 'id', headerName: 'ID', headerAlign: 'center', width: 70 },
         { field: 'name', headerName: 'Name', width: 190 },
@@ -55,12 +55,12 @@ const DataTable = () => {
         }
     ];
 
-    const [users, setUsers] = useState([]);
-    useEffect(() => {
-        fetch('http://localhost:5000/users')
-            .then(res => res.json())
-            .then(data => setUsers(data))
-    }, [])
+    // const [users, setUsers] = useState([]);
+    // useEffect(() => {
+    //     fetch('http://localhost:5000/users')
+    //         .then(res => res.json())
+    //         .then(data => setUsers(data))
+    // }, [])
 
     return (
         <Box sx={{ height: 400, width: '100%', my: 5, mx: 'auto' }}>
