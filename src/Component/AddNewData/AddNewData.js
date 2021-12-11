@@ -43,9 +43,9 @@ const AddNewData = ({ open, handleClose, users }) => {
         newInfo[field] = value;
         setData(newInfo);
     }
-    console.log(users.length + 1);
-    // console.log('serial number: ', serialNumber);
-    console.log(data);
+    // console.log(users.length + 1);
+    // // console.log('serial number: ', serialNumber);
+    // console.log(data);
 
     const handleSubmit = (e) => {
 

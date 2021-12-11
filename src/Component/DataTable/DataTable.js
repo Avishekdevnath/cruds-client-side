@@ -4,13 +4,17 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Button } from '@mui/material';
 
 const DataTable = ({ users, setUsers }) => {
-    const [select, setSelection] = useState([]);
-    console.log(select);
+    const [selectNums, setSelectNums] = useState([]);
+    const [selectedUser, setSelectedUser] = useState([]);
 
+    const array = [];
     const handleRowSelection = (e) => {
-        setSelection(e);
-        console.log(e);
+        setSelectNums(e);
     }
+    selectNums?.map(num => {
+        const filterUser = users?.filter(user => user?.id === num);
+        array.push(filterUser[0]);
+    })
 
     const deleteData = (event, cellValues) => {
         const id = cellValues.row._id;
@@ -33,15 +37,16 @@ const DataTable = ({ users, setUsers }) => {
     }
 
     const columns = [
-        { field: 'id', headerName: 'ID', headerAlign: 'center', width: 70 },
-        { field: 'name', headerName: 'Name', width: 190 },
+        { field: 'id', headerName: 'ID', headerAlign: 'center', width: 70, disableClickEventBubbling: true, },
+        { field: 'name', headerName: 'Name', width: 190, disableClickEventBubbling: true, },
         {
-            field: 'phone', headerName: 'Phone Number', width: 150
+            field: 'phone', headerName: 'Phone Number', width: 150, disableClickEventBubbling: true,
         },
         {
             field: 'email',
             headerName: 'Email',
             width: 240,
+            disableClickEventBubbling: true,
         },
         {
             field: 'hobbies',
@@ -49,14 +54,13 @@ const DataTable = ({ users, setUsers }) => {
             description: 'This column has a value getter and is not sortable.',
             sortable: false,
             width: 160,
-            // valueGetter: (params) =>
-            //     `${params.getValue(params.id, 'firstName') || ''} ${params.getValue(params.id, 'lastName') || ''
-            //     }`,
+            disableClickEventBubbling: true,
         },
         {
             field: "update",
             headerName: "Update",
             sortable: false,
+            disableClickEventBubbling: true,
             renderCell: (params) => {
                 const onClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
@@ -69,6 +73,7 @@ const DataTable = ({ users, setUsers }) => {
         },
         {
             field: "Print",
+            disableClickEventBubbling: true,
             renderCell: (cellValues) => {
                 return (
                     <Button
@@ -85,13 +90,6 @@ const DataTable = ({ users, setUsers }) => {
             }
         }
     ];
-
-    // const [users, setUsers] = useState([]);
-    // useEffect(() => {
-    //     fetch('http://localhost:5000/users')
-    //         .then(res => res.json())
-    //         .then(data => setUsers(data))
-    // }, [])
 
     return (
         <Box sx={{ height: 400, width: '100%', my: 5, mx: 'auto' }}>
