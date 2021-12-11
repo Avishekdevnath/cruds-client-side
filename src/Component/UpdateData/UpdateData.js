@@ -5,7 +5,7 @@ import Modal from '@mui/material/Modal';
 import { TextField, Snackbar, Alert } from '@mui/material';
 import { Box } from '@mui/system';
 
-const UpdateData = ({ open, handleClose, users }) => {
+const UpdateData = ({ open, handleClose, updateID }) => {
     const style = {
         position: 'absolute',
         top: '50%',
@@ -34,7 +34,7 @@ const UpdateData = ({ open, handleClose, users }) => {
     /////////////////////////////////
 
 
-    const [data, setData] = useState();
+    const [data, setData] = useState({});
     //HandleOnBlur
     const handleOnBlur = e => {
         const field = e.target.name;
@@ -43,23 +43,25 @@ const UpdateData = ({ open, handleClose, users }) => {
         newInfo[field] = value;
         setData(newInfo);
     }
+    console.log(data);
 
+    console.log(updateID);
     //HandleOnSubmit
-    const handleSubmit = (users) => {
+    const handleSubmit = (updateID) => {
 
         alert('updated');
-        const url = `https://intense-dawn-05513.herokuapp.com/allOrders/${_id}`;
-        const updatedStatus = 'shipped';
-        const updatedUser = { status: updatedStatus }
+        const url = `http://localhost:5000/users/${updateID}`;
+        // const updatedStatus = 'shipped';
+        // const updatedUser = { status: updatedStatus }
         fetch(url, {
             method: 'PUT',
             headers: {
                 'content-type': 'application/json'
             },
-            body: JSON.stringify(updatedUser)
+            body: JSON.stringify(data)
         })
 
-        e.preventDefault();
+        // e.preventDefault();
     }
 
 
@@ -76,7 +78,7 @@ const UpdateData = ({ open, handleClose, users }) => {
                     Update Data
                 </Typography>
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={() => handleSubmit(updateID)}>
                     <TextField
                         required
                         name="name"

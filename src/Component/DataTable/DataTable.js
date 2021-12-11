@@ -7,6 +7,7 @@ import UpdateData from '../UpdateData/UpdateData';
 const DataTable = ({ users, setUsers }) => {
     const [selectNums, setSelectNums] = useState([]);
     const [selectedUser, setSelectedUser] = useState([]);
+    const [updateID, setUpdateID] = useState(null);
 
     const array = [];
     const handleRowSelection = (e) => {
@@ -37,6 +38,12 @@ const DataTable = ({ users, setUsers }) => {
 
     }
 
+    const updateData = (event, cellValues, handleOpen) => {
+        handleOpen();
+        const id = cellValues.row._id;
+        setUpdateID(id);
+    }
+
     const columns = [
         {
             field: 'id',
@@ -64,18 +71,21 @@ const DataTable = ({ users, setUsers }) => {
             disableClickEventBubbling: true,
         },
         {
-            field: "update",
-            headerName: "Update",
-            sortable: false,
+            field: "Update",
             disableClickEventBubbling: true,
-            renderCell: (params) => {
-                const onClick = (e) => {
-                    e.stopPropagation(); // don't select this row after clicking
-
-                    // return alert("JSON.stringify(thisRow, null, 4)");
-                };
-
-                return <Button variant="contained" sx={{ background: 'green' }} onClick={onClick, handleOpen}>Update</Button>;
+            renderCell: (cellValues) => {
+                return (
+                    <Button
+                        variant="contained"
+                        sx={{ background: 'green' }}
+                        color="primary"
+                        onClick={(event) => {
+                            updateData(event, cellValues, handleOpen);
+                        }}
+                    >
+                        Update
+                    </Button>
+                );
             }
         },
         {
@@ -119,7 +129,7 @@ const DataTable = ({ users, setUsers }) => {
             <UpdateData
                 open={open}
                 handleClose={handleClose}
-                users={users}
+                updateID={updateID}
             >
 
             </UpdateData>
