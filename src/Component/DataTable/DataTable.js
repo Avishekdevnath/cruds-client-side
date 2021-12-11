@@ -1,11 +1,11 @@
 import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { Button, FormControlLabel, TextField } from '@mui/material';
+import { Button } from '@mui/material';
 
 const DataTable = () => {
     const columns = [
-        { field: 'id', headerName: 'ID', width: 70 },
+        { field: 'id', headerName: 'ID', headerAlign: 'center', width: 70 },
         { field: 'name', headerName: 'Name', width: 190 },
         {
             field: 'phone', headerName: 'Phone Number', width: 150
@@ -33,17 +33,7 @@ const DataTable = () => {
                 const onClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
 
-                    const api: GridApi = params.api;
-                    const thisRow: Record<string, GridCellValue> = {};
-
-                    api
-                        .getAllColumns()
-                        .filter((c) => c.field !== "__check__" && !!c)
-                        .forEach(
-                            (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
-                        );
-
-                    return alert(JSON.stringify(thisRow, null, 4));
+                    return alert("JSON.stringify(thisRow, null, 4)");
                 };
 
                 return <Button variant="contained" sx={{ background: 'green' }} onClick={onClick}>Update</Button>;
@@ -57,17 +47,7 @@ const DataTable = () => {
                 const onClick = (e) => {
                     e.stopPropagation(); // don't select this row after clicking
 
-                    const api: GridApi = params.api;
-                    const thisRow: Record<string, GridCellValue> = {};
-
-                    api
-                        .getAllColumns()
-                        .filter((c) => c.field !== "__check__" && !!c)
-                        .forEach(
-                            (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
-                        );
-
-                    return alert(JSON.stringify(thisRow, null, 4));
+                    return alert("JSON.stringify(thisRow, null, 4)");
                 };
 
                 return <Button variant="contained" sx={{ background: 'red' }} onClick={onClick}>Delete</Button>;

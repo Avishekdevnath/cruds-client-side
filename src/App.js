@@ -1,10 +1,11 @@
 import './App.css';
-import { Container } from '@mui/material';
+import { Container, Typography } from '@mui/material';
 import DataTable from './Component/DataTable/DataTable';
 
 function App() {
   return (
     <Container>
+      <Typography variant="h4" sx={{ mt: 5 }}>Data Table</Typography>
       <DataTable></DataTable>
     </Container>
   );
