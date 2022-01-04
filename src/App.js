@@ -6,7 +6,7 @@ import Home from './Component/Home/Home';
 function App() {
   return (
     <Container>
-      <Typography variant="h4" sx={{ mt: 5 }}>Data Table</Typography>
+      <Typography variant="h4" sx={{ mt: 5 }}>Employee Management</Typography>
       <Home></Home>
     </Container>
   );

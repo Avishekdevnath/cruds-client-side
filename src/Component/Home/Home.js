@@ -1,40 +1,54 @@
-import { Button} from '@mui/material';
+import { Button } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import AddNewData from '../AddNewData/AddNewData';
 import DataTable from '../DataTable/DataTable';
 import SendIcon from '@mui/icons-material/Send';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTableData } from '../../Redux/actions';
+import axios from 'axios';
+// import useSelectedData from '../../Hooks/useSelectedData';
 
 const Home = () => {
+    const rows = useSelector((state) => state.tableDataReducer?.data)
+    const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [users, setUsers] = useState([]);
-    const [emailData, setEmailData] = useState([]);
+    const [selectedRowNum, setSelectedRowNum] = useState([])
 
+    // const array = [];
+
+    // selectedRowNum?.map(num => {
+    //     const filterUser = rows?.filter(row => row?.id === num);
+    //     array.push(filterUser[0]);
+    // })
+    // console.log(array);
+
+    const fetchProducts = async () => {
+        const response = await axios
+            .get("http://localhost:5000/users")
+            .catch((err) => {
+                console.error("Err: ", err);
+            });
+        dispatch(setTableData(response.data));
+    };
     useEffect(() => {
-        fetch('http://localhost:5000/users')
-            .then(res => res.json())
-            .then(data => setUsers(data))
-    }, [users])
-
+        fetchProducts();
+    }, [rows]);
 
     const handleData = (e) => {
-
-        // console.log("From Child", e);
-        setEmailData(e);
-
+        console.log('from function', e);
+        setSelectedRowNum(e);
     };
-
-    const sendEmail = () => {
-        const data = emailData;
-        console.log("inside Email", data);
-    }
-
+    // useEffect(() => {
+    //     const emailData = handleData();
+    // }, [handleData]);
 
     return (
         <Box>
-            <DataTable users={users} setUsers={setUsers} handleData={handleData}></DataTable>
+            <DataTable handleData={handleData}></DataTable>
             <Box sx={{ height: '100%', width: '100%', my: 5, mx: 'auto', }}>
                 <Box className="">
                     <Box
@@ -45,7 +59,7 @@ const Home = () => {
                             maxWidth: 300,
                         }}
                     >
-                        <Button onClick={sendEmail} variant="contained" sx={{ m: '5px' }} endIcon={<SendIcon />}>
+                        <Button variant="contained" sx={{ m: '5px' }} endIcon={<SendIcon />}>
                             Send
                         </Button>
                         <Button onClick={handleOpen} variant="contained" sx={{ m: '5px' }} color="success">

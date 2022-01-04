@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { TextField, Snackbar, Alert } from '@mui/material';
 import { Box } from '@mui/system';
+import axios from 'axios';
 
 const UpdateData = ({ open, handleClose, updateID }) => {
     const style = {
@@ -43,27 +44,18 @@ const UpdateData = ({ open, handleClose, updateID }) => {
         newInfo[field] = value;
         setData(newInfo);
     }
-    console.log(data);
 
-    console.log(updateID);
     //HandleOnSubmit
     const handleSubmit = (updateID) => {
 
         alert('updated');
-        const url = `http://localhost:5000/users/${updateID}`;
-        // const updatedStatus = 'shipped';
-        // const updatedUser = { status: updatedStatus }
-        fetch(url, {
-            method: 'PUT',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
+        axios.put(`http://localhost:5000/users/${updateID}`, data)
+            .then(res => {
+                handleClose();
+            })
 
         // e.preventDefault();
     }
-
 
 
     return (
@@ -81,9 +73,15 @@ const UpdateData = ({ open, handleClose, updateID }) => {
                 <form onSubmit={() => handleSubmit(updateID)}>
                     <TextField
                         required
+                        name="photo"
+                        label="Photo URL"
+                        sx={{ my: "10px", mx: "auto", width: "80%" }}
+                        onBlur={handleOnBlur}
+                    />
+                    <TextField
+                        required
                         name="name"
                         label="Name"
-                        defaultValue=""
                         sx={{ my: "10px", mx: "auto", width: "80%" }}
                         onBlur={handleOnBlur}
                     />
@@ -91,7 +89,6 @@ const UpdateData = ({ open, handleClose, updateID }) => {
                         required
                         name="phone"
                         label="Phone Number"
-                        defaultValue=""
                         sx={{ my: "10px", mx: "auto", width: "80%" }}
                         onBlur={handleOnBlur}
                     />
@@ -100,21 +97,32 @@ const UpdateData = ({ open, handleClose, updateID }) => {
                         name="email"
                         type="email"
                         label="E-mail"
-                        defaultValue=""
                         sx={{ my: "10px", mx: "auto", width: "80%" }}
                         onBlur={handleOnBlur}
                     />
                     <TextField
                         required
-                        name="hobbies"
-                        label="Hobbies"
-                        defaultValue=""
+                        name="designation"
+                        label="Designation"
+                        sx={{ my: "10px", mx: "auto", width: "80%" }}
+                        onBlur={handleOnBlur}
+                    />
+                    <TextField
+                        required
+                        name="salary"
+                        label="Salary"
+                        sx={{ my: "10px", mx: "auto", width: "80%" }}
+                        onBlur={handleOnBlur}
+                    />
+                    <TextField
+                        required
+                        name="joinedDate"
+                        label="Joined Date"
                         sx={{ my: "10px", mx: "auto", width: "80%" }}
                         onBlur={handleOnBlur}
                     />
 
                     <Box sx={{ height: '100%', width: '100%', mx: 'auto', }}>
-                        <div className="">
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -135,7 +143,6 @@ const UpdateData = ({ open, handleClose, updateID }) => {
                                     onClick={handleClose}>Close
                                 </Button>
                             </Box>
-                        </div>
                     </Box>
                 </form>
             </Box>

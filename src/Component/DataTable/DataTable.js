@@ -1,38 +1,107 @@
 import { Box } from '@mui/system';
-import React, { useEffect, useState } from 'react';
-import { DataGrid } from '@mui/x-data-grid';
-import { Button } from '@mui/material';
+import React, { useState } from 'react';
+import {
+    DataGrid, 
+    GridToolbarDensitySelector,
+    GridToolbarFilterButton, 
+} from '@mui/x-data-grid';
+import { Avatar, Button } from '@mui/material';
 import UpdateData from '../UpdateData/UpdateData';
-import Home from '../Home/Home';
+import DownloadIcon from '@mui/icons-material/Download';
+import ClearIcon from '@mui/icons-material/Clear';
+import SearchIcon from '@mui/icons-material/Search';
+import IconButton from '@mui/material/IconButton';
+import TextField from '@mui/material/TextField';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTableData } from '../../Redux/actions';
+import axios from 'axios';
 
-const DataTable = ({ users, setUsers, handleData }) => {
+function EditToolbar(props) {
+    // const { selectedCellParams, apiRef, setSelectedCellParams } = props;
+
+    return (
+        <Box
+            sx={{
+                p: 0.5,
+                pb: 0,
+                justifyContent: 'space-between',
+                display: 'flex',
+                alignItems: 'flex-start',
+                flexWrap: 'wrap',
+            }}
+        >
+            <Box>
+                <GridToolbarFilterButton />
+                <GridToolbarDensitySelector />
+                <Button startIcon={<DownloadIcon />}>Export</Button>
+            </Box>
+            <TextField
+                variant="standard"
+                value={props.value}
+                onChange={props.onChange}
+                placeholder="Search…"
+                InputProps={{
+                    startAdornment: <SearchIcon fontSize="small" />,
+                    endAdornment: (
+                        <IconButton
+                            title="Clear"
+                            aria-label="Clear"
+                            size="small"
+                            style={{ visibility: props.value ? 'visible' : 'hidden' }}
+                            onClick={props.clearSearch}
+                        >
+                            <ClearIcon fontSize="small" />
+                        </IconButton>
+                    ),
+                }}
+                sx={{
+                    width: {
+                        xs: 1,
+                        sm: 'auto',
+                    },
+                    m: (theme) => theme.spacing(1, 0.5, 1.5),
+                    '& .MuiSvgIcon-root': {
+                        mr: 0.5,
+                    },
+                    '& .MuiInput-underline:before': {
+                        borderBottom: 1,
+                        borderColor: 'divider',
+                    },
+                }}
+            />
+        </Box>
+    );
+}
+
+const DataTable = ({handleData }) => {
     const [selectNums, setSelectNums] = useState([]);
-    const [selectedUser, setSelectedUser] = useState([]);
     const [updateID, setUpdateID] = useState(null);
+    const rows = useSelector((state) => state.tableDataReducer?.data);
+    const dispatch = useDispatch();
 
-    const array = [];
+    // const array = [];
     const handleRowSelection = (e) => {
         setSelectNums(e);
     }
-    selectNums?.map(num => {
-        const filterUser = users?.filter(user => user?.id === num);
-        array.push(filterUser[0]);
-    })
+    // selectNums?.map(num => {
+    //     const filterUser = users?.filter(user => user?.id === num);
+    //     array.push(filterUser[0]);
+    //     handleData('array');
+    // })
+    // useSelectedData(array);
+        handleData(selectNums);
 
+    
     const deleteData = (event, cellValues) => {
         const id = cellValues.row._id;
         const confirm = window.confirm('Do you want to delete?')
         if (confirm) {
-            const url = `http://localhost:5000/users/${id}`;
-            fetch(url, {
-                method: 'DELETE',
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.deletedCount > 0) {
+            axios.delete(`http://localhost:5000/users/${id}`)
+                .then(res => {
+                    if (res.data.deletedCount > 0) {
                         alert('deleted seccessfully');
-                        const remainingUsers = users.filter(user => user._id !== id)
-                        setUsers(remainingUsers);
+                        const remainingUsers = rows.filter(user => user._id !== id)
+                        dispatch(setTableData(remainingUsers));
                     }
                 })
         }
@@ -49,9 +118,14 @@ const DataTable = ({ users, setUsers, handleData }) => {
         {
             field: 'id',
             headerName: 'ID',
-            // headerAlign: 'center',
             width: 70,
             disableClickEventBubbling: true,
+        },
+        {
+            field: 'photo',
+            headerName: 'Profile',
+            sortable: false,
+            renderCell: (params) => <Avatar src={params.value} alt={params.value} />, // renderCell will render the component
         },
         { field: 'name', headerName: 'Name', width: 190, disableClickEventBubbling: true, },
         {
@@ -64,9 +138,23 @@ const DataTable = ({ users, setUsers, handleData }) => {
             disableClickEventBubbling: true,
         },
         {
-            field: 'hobbies',
-            headerName: 'Hobbies',
+            field: 'designation',
+            headerName: 'Designation',
             description: 'This column has a value getter and is not sortable.',
+            sortable: false,
+            width: 160,
+            disableClickEventBubbling: true,
+        },
+        {
+            field: 'salary',
+            headerName: 'Salary',
+            sortable: false,
+            width: 160,
+            disableClickEventBubbling: true,
+        },
+        {
+            field: 'joinedDate',
+            headerName: 'Joined Date',
             sortable: false,
             width: 160,
             disableClickEventBubbling: true,
@@ -74,12 +162,12 @@ const DataTable = ({ users, setUsers, handleData }) => {
         {
             field: "Update",
             disableClickEventBubbling: true,
+            sortable: false,
             renderCell: (cellValues) => {
                 return (
                     <Button
                         variant="contained"
-                        sx={{ background: 'green' }}
-                        color="primary"
+                        color="success"
                         onClick={(event) => {
                             updateData(event, cellValues, handleOpen);
                         }}
@@ -92,12 +180,12 @@ const DataTable = ({ users, setUsers, handleData }) => {
         {
             field: "Delete",
             disableClickEventBubbling: true,
+            sortable: false,
             renderCell: (cellValues) => {
                 return (
                     <Button
                         variant="contained"
-                        sx={{ background: 'red' }}
-                        color="primary"
+                        color="error"
                         onClick={(event) => {
                             deleteData(event, cellValues);
                         }}
@@ -112,24 +200,30 @@ const DataTable = ({ users, setUsers, handleData }) => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
-    console.log("In Child", array);
-
-    // handleData = () => {
-    //     return array;
-    // }
-    handleData(array);
     return (
         <>
 
-            <Box sx={{ height: 400, width: '100%', my: 5, mx: 'auto' }}>
+            <Box sx={{ height: 500, width: '100%', my: 5, mx: 'auto' }}>
                 <DataGrid
-                    rows={users}
+                    rows={rows}
                     columns={columns}
                     pageSize={5}
                     rowsPerPageOptions={[10]}
                     checkboxSelection
-                    onSelectionModelChange={handleRowSelection}
+                    disableSelectionOnClick
+                    // onSelectionModelChange={handleRowSelection}
+                    onSelectionModelChange={(ids) => {
+                        const selectedIDs = new Set(ids);
+                        const selectedRows = rows.filter((row) =>
+                            selectedIDs.has(row.id),
+                        );
+
+                        // setSelectedRows(selectedRows);
+                        console.log('selectedRows', selectedRows)
+                    }}
+                    components={{
+                        Toolbar: EditToolbar,
+                    }}
                 />
             </Box>
             <UpdateData
@@ -137,7 +231,6 @@ const DataTable = ({ users, setUsers, handleData }) => {
                 handleClose={handleClose}
                 updateID={updateID}
             >
-
             </UpdateData>
         </>
     );
